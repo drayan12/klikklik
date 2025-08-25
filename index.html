@@ -1,78 +1,25 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>HLS Player</title>
-  <link href="https://vjs.zencdn.net/7.20.3/video-js.css" rel="stylesheet" />
-
-  <style>
-    body {
-      margin: 0;
-      background: #000;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-    }
-    .video-js {
-      width: 100%;
-      height: 100%;
-      max-width: 1000px;
-    }
-  </style>
+  <meta charset="utf-8">
+  <title>Video Player</title>
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 </head>
 <body>
-  <video id="videoPlayer" class="video-js vjs-default-skin" controls autoplay></video>
-
-  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
-  <script src="https://vjs.zencdn.net/7.20.3/video.min.js"></script>
-
+  <video id="video" controls autoplay width="640"></video>
   <script>
-    var video = document.getElementById('videoPlayer');
-    var videoSrc = "https://example.com/stream/playlist.m3u8"; // Ganti link HLS kamu
+    var video = document.getElementById('video');
+    var videoSrc = "https://cdn.aon.my.id/Sen Anlat/Sen Anlat Karadeniz 1. Bölüm.mp4.mp4"; // link mp4 atau m3u8
 
-    if (Hls.isSupported()) {
-      var hls = new Hls({
-        autoStartLoad: true,
-        capLevelToPlayerSize: false,
-        startLevel: -1,
-      });
+    if (video.canPlayType('application/vnd.apple.mpegurl')) {
+      // Safari (native HLS)
+      video.src = videoSrc;
+    } else if (Hls.isSupported()) {
+      // Browser lain pakai hls.js
+      var hls = new Hls();
       hls.loadSource(videoSrc);
       hls.attachMedia(video);
-
-      // Tambahkan kualitas manual
-      hls.on(Hls.Events.MANIFEST_PARSED, function () {
-        var levels = hls.levels;
-        console.log("Available qualities:", levels);
-
-        var qualityMenu = document.createElement("select");
-        qualityMenu.style.position = "absolute";
-        qualityMenu.style.top = "10px";
-        qualityMenu.style.right = "10px";
-        qualityMenu.style.zIndex = "9999";
-        qualityMenu.style.background = "#000";
-        qualityMenu.style.color = "#fff";
-        qualityMenu.style.padding = "5px";
-
-        var autoOption = document.createElement("option");
-        autoOption.value = -1;
-        autoOption.text = "Auto";
-        qualityMenu.appendChild(autoOption);
-
-        levels.forEach((level, i) => {
-          var option = document.createElement("option");
-          option.value = i;
-          option.text = level.height + "p";
-          qualityMenu.appendChild(option);
-        });
-
-        qualityMenu.addEventListener("change", function () {
-          hls.currentLevel = parseInt(this.value);
-        });
-
-        document.body.appendChild(qualityMenu);
-      });
-    } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
+    } else {
       video.src = videoSrc;
     }
   </script>
