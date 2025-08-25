@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <title>Universal Player</title>
@@ -8,24 +8,22 @@
 <body>
   <video id="video" controls autoplay width="640"></video>
   <script>
-    // Ambil link video dari URL parameter (?src=...)
-    const urlParams = new URLSearchParams(window.location.search);
-    const videoSrc = urlParams.get("src");
+    const params = new URLSearchParams(window.location.search);
+    const videoSrc = params.get("src");
+    const video = document.getElementById("video");
 
-    var video = document.getElementById('video');
-
-    if (videoSrc) {
+    if (!videoSrc) {
+      document.body.innerHTML = "<p style='color:red'>⚠ Tidak ada link video dalam parameter ?src=</p>";
+    } else {
       if (video.canPlayType('application/vnd.apple.mpegurl')) {
         video.src = videoSrc;
       } else if (Hls.isSupported()) {
-        var hls = new Hls();
+        const hls = new Hls();
         hls.loadSource(videoSrc);
         hls.attachMedia(video);
       } else {
         video.src = videoSrc;
       }
-    } else {
-      document.body.innerHTML += "<p style='color:red'>❌ Tidak ada link video!</p>";
     }
   </script>
 </body>
