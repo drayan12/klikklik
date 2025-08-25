@@ -2,11 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>Universal Player</title>
-  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+  <title>MP4 Player</title>
 </head>
 <body>
   <video id="video" controls autoplay width="640"></video>
+
   <script>
     const params = new URLSearchParams(window.location.search);
     const videoSrc = params.get("src");
@@ -15,15 +15,7 @@
     if (!videoSrc) {
       document.body.innerHTML = "<p style='color:red'>⚠ Tidak ada link video dalam parameter ?src=</p>";
     } else {
-      if (video.canPlayType('application/vnd.apple.mpegurl')) {
-        video.src = videoSrc;
-      } else if (Hls.isSupported()) {
-        const hls = new Hls();
-        hls.loadSource(videoSrc);
-        hls.attachMedia(video);
-      } else {
-        video.src = videoSrc;
-      }
+      video.src = videoSrc;
     }
   </script>
 </body>
