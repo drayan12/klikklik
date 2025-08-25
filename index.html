@@ -2,25 +2,30 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Video Player</title>
+  <title>Universal Player</title>
   <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 </head>
 <body>
   <video id="video" controls autoplay width="640"></video>
   <script>
-    var video = document.getElementById('video');
-    var videoSrc = "https://cdn.aon.my.id/Sen Anlat/Sen Anlat Karadeniz 1. Bölüm.mp4.mp4"; // link mp4 atau m3u8
+    // Ambil link video dari URL parameter (?src=...)
+    const urlParams = new URLSearchParams(window.location.search);
+    const videoSrc = urlParams.get("src");
 
-    if (video.canPlayType('application/vnd.apple.mpegurl')) {
-      // Safari (native HLS)
-      video.src = videoSrc;
-    } else if (Hls.isSupported()) {
-      // Browser lain pakai hls.js
-      var hls = new Hls();
-      hls.loadSource(videoSrc);
-      hls.attachMedia(video);
+    var video = document.getElementById('video');
+
+    if (videoSrc) {
+      if (video.canPlayType('application/vnd.apple.mpegurl')) {
+        video.src = videoSrc;
+      } else if (Hls.isSupported()) {
+        var hls = new Hls();
+        hls.loadSource(videoSrc);
+        hls.attachMedia(video);
+      } else {
+        video.src = videoSrc;
+      }
     } else {
-      video.src = videoSrc;
+      document.body.innerHTML += "<p style='color:red'>❌ Tidak ada link video!</p>";
     }
   </script>
 </body>
